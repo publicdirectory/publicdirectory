@@ -1,6 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Public Directory
 
-## Getting Started
+Find it at [Publicdirectory.co](https://publicdirectory.co)
+
+## To Run it Yourself
 
 First, run the development server:
 
