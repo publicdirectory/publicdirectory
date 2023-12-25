@@ -97,7 +97,6 @@ export default function Home() {
           }
         } else {
           const threadsData = await checkThreadsHandle(handle.x_handle)
-          console.log(threadsData)
           if (threadsData && threadsData.threads_exists) {
             return {
               ...handle,
