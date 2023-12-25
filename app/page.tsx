@@ -158,7 +158,7 @@ export default function Home() {
             <TableHead className="text-slate-900">Threads Name</TableHead>
             <TableHead className="text-slate-900">Threads Handle</TableHead>
             <TableHead className="text-slate-900">Follow on Threads</TableHead>
-            <TableHead className="text-slate-900">Actions</TableHead>
+            {/* <TableHead className="text-slate-900">Actions</TableHead> */}
             {/* <TableHead className="text-slate-900">Other</TableHead> */}
           </TableRow>
         </TableHeader>
@@ -207,7 +207,7 @@ export default function Home() {
                   ""
                 )}
               </TableCell>
-              <TableCell>
+              {/*<TableCell>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="font-normal">
@@ -230,10 +230,6 @@ export default function Home() {
                       <DialogTitle>
                         {handle.threads_exists ? "Edit" : "Add"} Threads handle
                       </DialogTitle>
-                      {/* <DialogDescription>
-                        Make changes to your profile here. Click save when
-                        you're done.
-                      </DialogDescription> */}
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-6 items-center gap-4">
@@ -285,7 +281,7 @@ export default function Home() {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-              </TableCell>
+              </TableCell> */}
               {/* <TableCell>{handle.other}</TableCell> */}
             </TableRow>
           ))}

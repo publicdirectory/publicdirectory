@@ -9,7 +9,7 @@
   "BoltFoundry": {
     "x_handle": "BoltFoundry",
     "threads_name": "Bolt Foundry",
-    "threads_handle": "bolt",
+    "threads_handle": "BoltFoundry",
     "threads_exists": true,
     "other": ""
   }
