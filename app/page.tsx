@@ -89,7 +89,8 @@ export default function Home() {
         web:
       </p>
       <p className="mb-6">
-        (You don't have to format the handles in any way, just paste them in)
+        (You don&apos;t have to format the handles in any way, just paste them
+        in)
       </p>
 
       <textarea
