@@ -19,6 +19,7 @@ export default function Home() {
     {
       x_handle: "ptsi",
       threads_handle: "philtsip",
+      threads_exists: true,
       other: "",
     },
   ])
@@ -77,12 +78,12 @@ export default function Home() {
         }
       })
     )
-
+    console.log(updatedHandles)
     setHandles(updatedHandles)
   }
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-8">
+    <div className="flex flex-col items-center justify-center px-4 py-8 max-w-[900px] mx-auto">
       <h1 className="text-4xl font-bold mb-6">Public Directory</h1>
       <p className="mb-3">
         Paste in X(Twitter) handles to find them on Threads and elsewhere on the
@@ -94,7 +95,7 @@ export default function Home() {
       </p>
 
       <textarea
-        className="w-full max-w-lg p-4 mb-4 border rounded-md"
+        className="w-full max-w-lg p-4 mb-4 border rounded-md h-auto"
         placeholder="Paste in X(Twitter) handles here"
         rows={4}
         value={inputText}
@@ -134,25 +135,32 @@ export default function Home() {
                 </a>
               </TableCell>
               <TableCell>
-                {" "}
-                <a
-                  className="underline text-blue-600"
-                  href={`https://www.threads.net/@${handle.threads_handle}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  @{handle.threads_handle}
-                </a>
+                {handle.threads_exists ? (
+                  <a
+                    className="underline text-blue-600"
+                    href={`https://www.threads.net/@${handle.threads_handle}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    @{handle.threads_handle}
+                  </a>
+                ) : (
+                  "not found"
+                )}
               </TableCell>
               <TableCell>
-                <a
-                  className="inline-block px-4 py-2 border rounded text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
-                  href={`https://www.threads.net/@${handle.threads_handle}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Follow
-                </a>
+                {handle.threads_exists ? (
+                  <a
+                    className="inline-block px-4 py-2 border rounded text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
+                    href={`https://www.threads.net/@${handle.threads_handle}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Follow
+                  </a>
+                ) : (
+                  ""
+                )}
               </TableCell>
               {/* <TableCell>{handle.other}</TableCell> */}
             </TableRow>
