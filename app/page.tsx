@@ -12,17 +12,13 @@ import {
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
-  const [inputText, setInputText] = useState("")
+  const [inputText, setInputText] = useState(
+    "@Billboards3D\n@AkoolInc\n@chigozienri\n@BoltFoundry\n@emilkowalski_"
+  )
   const [handles, setHandles] = useState([
     {
       x_handle: "ptsi",
       threads_handle: "philtsip",
-      other: "",
-    },
-    {
-      x_handle: "ptsi",
-      threads_handle: "philtsip",
-      threads_exists: true,
       other: "",
     },
   ])
@@ -89,7 +85,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center px-4 py-8">
       <h1 className="text-4xl font-bold mb-6">Public Directory</h1>
       <p className="mb-3">
-        Paste in Twitter(X) handles to find them on Threads and elsewhere on the
+        Paste in X(Twitter) handles to find them on Threads and elsewhere on the
         web:
       </p>
       <p className="mb-6">
@@ -98,7 +94,7 @@ export default function Home() {
 
       <textarea
         className="w-full max-w-lg p-4 mb-4 border rounded-md"
-        placeholder="Paste in Twitter(X) handles here"
+        placeholder="Paste in X(Twitter) handles here"
         rows={4}
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
@@ -116,7 +112,7 @@ export default function Home() {
         <TableHeader>
           <TableRow>
             {/* <TableHead className="text-slate-900">Name</TableHead> */}
-            <TableHead className="text-slate-900">Twitter(X) Handle</TableHead>
+            <TableHead className="text-slate-900">X(Twitter) Handle</TableHead>
             <TableHead className="text-slate-900">Threads Handle</TableHead>
             <TableHead className="text-slate-900">Follow on Threads</TableHead>
             {/* <TableHead className="text-slate-900">Other</TableHead> */}
