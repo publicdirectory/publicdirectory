@@ -1,0 +1,14 @@
+{
+  "ptsi": {
+    "x_handle": "ptsi",
+    "threads_handle": "philtsip",
+    "threads_exists": true,
+    "other": ""
+  },
+  "BoltFoundry": {
+    "x_handle": "BoltFoundry",
+    "threads_handle": "bolt",
+    "threads_exists": true,
+    "other": ""
+  }
+}
