@@ -32,6 +32,7 @@ export default function Home() {
   const [handles, setHandles] = useState([
     {
       x_handle: "ptsi",
+      threads_name: "Philipp Tsipman",
       threads_handle: "philtsip",
       threads_exists: true,
       other: "",
@@ -55,6 +56,7 @@ export default function Home() {
     return handles.map((handle) => {
       return {
         x_handle: handle.slice(1),
+        threads_name: "",
         threads_handle: "",
         other: "",
       }
@@ -71,8 +73,7 @@ export default function Home() {
         body: JSON.stringify({ threads_handle: threads_handle }),
       })
 
-      const data = await response.json()
-      return data.threads_exists
+      return await response.json()
     } catch (error) {
       console.error(`Error calling API for handle ${threads_handle}:`, error)
       return false
@@ -90,14 +91,28 @@ export default function Home() {
             ...handle,
             threads_exists: true,
             // @ts-ignore
+            threads_name: directory[handle.x_handle].threads_name,
+            // @ts-ignore
             threads_handle: directory[handle.x_handle].threads_handle,
           }
         } else {
-          const threadsExists = await checkThreadsHandle(handle.x_handle)
+          const threadsData = await checkThreadsHandle(handle.x_handle)
+          console.log(threadsData)
+          if (threadsData && threadsData.threads_exists) {
+            return {
+              ...handle,
+              threads_exists: true,
+              threads_name: threadsData.threads_name
+                ? threadsData.threads_name
+                : "",
+              threads_handle: handle.x_handle,
+            }
+          }
           return {
             ...handle,
-            threads_exists: threadsExists,
-            threads_handle: threadsExists ? handle.x_handle : "",
+            threads_exists: false,
+            threads_name: "",
+            threads_handle: "",
           }
         }
       })
@@ -140,6 +155,7 @@ export default function Home() {
           <TableRow>
             {/* <TableHead className="text-slate-900">Name</TableHead> */}
             <TableHead className="text-slate-900">X(Twitter) Handle</TableHead>
+            <TableHead className="text-slate-900">Threads Name</TableHead>
             <TableHead className="text-slate-900">Threads Handle</TableHead>
             <TableHead className="text-slate-900">Follow on Threads</TableHead>
             <TableHead className="text-slate-900">Actions</TableHead>
@@ -159,6 +175,9 @@ export default function Home() {
                 >
                   @{handle.x_handle}
                 </a>
+              </TableCell>
+              <TableCell>
+                {handle.threads_name ? <>{handle.threads_name}</> : ""}
               </TableCell>
               <TableCell>
                 {handle.threads_exists ? (
@@ -218,23 +237,40 @@ export default function Home() {
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-6 items-center gap-4">
-                        <Label htmlFor="name" className="text-right col-span-2">
+                        <Label
+                          htmlFor="x_handle"
+                          className="text-right col-span-2"
+                        >
                           X(Twitter) Handle
                         </Label>
                         <p className="col-span-4 text-sm ml-3">
                           {handle.x_handle}
                         </p>
                       </div>
+
                       <div className="grid grid-cols-6 items-center gap-4">
                         <Label
-                          htmlFor="username"
+                          htmlFor="threads_handle"
                           className="text-right col-span-2"
                         >
                           Threads Handle
                         </Label>
                         <Input
-                          id="username"
+                          id="threads_handle"
                           value={handle.threads_handle}
+                          className="col-span-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-6 items-center gap-4">
+                        <Label
+                          htmlFor="threads_name"
+                          className="text-right col-span-2"
+                        >
+                          Threads Name (optional)
+                        </Label>
+                        <Input
+                          id="threads_name"
+                          value={handle.threads_name}
                           className="col-span-4"
                         />
                       </div>
