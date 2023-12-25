@@ -113,9 +113,11 @@ export default function Home() {
         Paste in X(Twitter) handles to find them on Threads and elsewhere on the
         web:
       </p>
-      <p className="mb-6">
-        (You don&apos;t have to format the handles in any way, just paste them
-        in)
+      <p className="text-sm">
+        You don&apos;t have to format the handles in any way.
+      </p>
+      <p className="mb-6 text-sm">
+        As long as they have an @ in front of them, just paste them in.
       </p>
       <textarea
         className="w-full max-w-lg p-4 mb-4 border rounded-md h-auto"
