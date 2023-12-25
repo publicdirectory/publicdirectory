@@ -114,10 +114,11 @@ export default function Home() {
         web:
       </p>
       <p className="text-sm">
-        You don&apos;t have to format the handles in any way.
+        You don&apos;t have to format the handles in any way. Raw text or HTML
+        is totally fine.
       </p>
       <p className="mb-6 text-sm">
-        As long as they have an @ in front of them, just paste them in.
+        As long as the handles have an @ in front of them, just paste it in.
       </p>
       <textarea
         className="w-full max-w-lg p-4 mb-4 border rounded-md h-auto"
