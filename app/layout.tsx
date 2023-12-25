@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Public Directory",
-  description: "A delightful, public, open-source social media directory",
+  description: "A delightful, public, and open-source social media directory",
 }
 
 export default function RootLayout({
