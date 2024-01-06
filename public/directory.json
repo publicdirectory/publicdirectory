@@ -3,14 +3,12 @@
     "x_handle": "ptsi",
     "threads_name": "Philipp Tsipman",
     "threads_handle": "philtsip",
-    "threads_exists": true,
     "other": ""
   },
-  "BoltFoundry": {
-    "x_handle": "BoltFoundry",
-    "threads_name": "Bolt Foundry",
-    "threads_handle": "BoltFoundry",
-    "threads_exists": true,
+  "sbyrnes": {
+    "x_handle": "sbyrnes",
+    "threads_name": "Sean Byrnes",
+    "threads_handle": "artbybyrnes",
     "other": ""
   }
 }
