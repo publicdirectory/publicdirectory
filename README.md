@@ -1,5 +1,7 @@
 # Public Directory
 
+Find X(Twitter) handles on Threads and elsewhere on the web
+
 Find it at [Publicdirectory.co](https://publicdirectory.co)
 
 ## To Run it Yourself
