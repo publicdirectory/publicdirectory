@@ -40,8 +40,10 @@ export default function Home() {
   ])
 
   const findSubstrings = (str: string) => {
-    const regex = /@\w+/g
-    let rawHandles = str.match(regex)
+    const urlRegex = /(http(s)?:\/\/)?(www.)?(twitter.com\/|x.com\/)/g
+    str = str.replace(urlRegex, "@")
+    const handleRegex = /(@\w+)/g
+    let rawHandles = str.match(handleRegex)
     let handles = []
 
     if (rawHandles === null) {
@@ -132,7 +134,8 @@ export default function Home() {
         is totally fine.
       </p>
       <p className="mb-6 text-sm">
-        As long as the handles have an @ in front of them, just paste it in.
+        As long as the handles have an @, twitter.com/, or x.com/ in front of
+        them, just paste it in.
       </p>
       <textarea
         className="w-full max-w-lg p-4 mb-4 border rounded-md h-auto"
