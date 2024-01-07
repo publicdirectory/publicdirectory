@@ -22,10 +22,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Pencil, Plus } from "lucide-react"
+import { RefreshCcw, Pencil, Plus } from "lucide-react"
 import directory from "../public/directory.json"
 
 export default function Home() {
+  const [loading, setLoading] = useState(false)
   const [inputText, setInputText] = useState(
     "@Billboards3D\n@AkoolInc\n@chigozienri\n@BoltFoundry\n@emilkowalski_"
   )
@@ -124,6 +125,7 @@ export default function Home() {
   }
 
   const handleButtonClick = async () => {
+    setLoading(true)
     let handles = findSubstrings(inputText)
     // console.log(handles)
 
@@ -173,6 +175,7 @@ export default function Home() {
     )
     // console.log(updatedHandles)
     setHandles(updatedHandles)
+    setLoading(false)
   }
 
   return (
@@ -208,7 +211,14 @@ export default function Home() {
         className="bg-purple-600 hover:bg-purple-700 w-48 mb-8"
         onClick={handleButtonClick}
       >
-        Find
+        {loading ? (
+          <>
+            Searching &nbsp;
+            <RefreshCcw className="animate-spin w-4 h-4" />
+          </>
+        ) : (
+          "Search"
+        )}
       </Button>
       <Table>
         <TableHeader>
