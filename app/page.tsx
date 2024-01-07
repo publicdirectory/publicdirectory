@@ -32,37 +32,70 @@ export default function Home() {
   const [handles, setHandles] = useState([
     {
       x_handle: "ptsi",
+      linkedin_handle: "philtsip",
       threads_name: "Philipp Tsipman",
       threads_handle: "philtsip",
-      threads_exists: true,
       other: "",
     },
   ])
 
   const findSubstrings = (str: string) => {
-    const urlRegex = /(http(s)?:\/\/)?(www.)?(twitter.com\/|x.com\/)/g
-    str = str.replace(urlRegex, "@")
-    const handleRegex = /(@\w+)/g
-    let rawHandles = str.match(handleRegex)
-    let handles = []
+    const xUrlRegex = /(http(s)?:\/\/)?(www.)?(twitter.com\/|x.com\/)/g
+    const xHandleRegex = /(@\w+)/g
+    const linkedinUrlRegex =
+      /(http(s)?:\/\/)?(www.)?(linkedin.com\/in\/)([^\/]+)/g
 
-    if (rawHandles === null) {
-      return []
-    } else {
-      handles = rawHandles.filter((handle, index) => {
+    let handles: {
+      x_handle: string
+      linkedin_handle: string
+      threads_name: string
+      threads_handle: string
+      other: string
+    }[] = []
+
+    // Find all X handles
+    str = str.replace(xUrlRegex, "@")
+    let xHandles = str.match(xHandleRegex)
+
+    // Clean up any duplicates
+    if (xHandles) {
+      // @ts-ignore
+      xHandles = xHandles.filter((handle, index) => {
         // @ts-ignore
-        return index === 0 || handle !== rawHandles[index - 1]
+        return index === 0 || handle !== xHandles[index - 1]
       })
     }
 
-    return handles.map((handle) => {
-      return {
+    // Add the X handles to the handles array
+    xHandles?.map((handle) => {
+      handles.push({
         x_handle: handle.slice(1),
+        linkedin_handle: "",
         threads_name: "",
         threads_handle: "",
         other: "",
-      }
+      })
     })
+
+    // Find all LinkedIn urls
+    let linkedinUrls = str.match(linkedinUrlRegex)
+
+    // Extract the LinkedIn handles
+    // For each URL, remove the part before the last "/"
+    let linkedinHandles = linkedinUrls?.map((url) => url.split("/").pop())
+
+    // Add the LinkedIn handles to the handles array
+    linkedinHandles?.map((handle) => {
+      handles.push({
+        x_handle: "",
+        linkedin_handle: handle ? handle : "",
+        threads_name: "",
+        threads_handle: "",
+        other: "",
+      })
+    })
+
+    return handles
   }
 
   const checkThreadsHandle = async (threads_handle: string) => {
@@ -84,41 +117,53 @@ export default function Home() {
 
   const handleButtonClick = async () => {
     let handles = findSubstrings(inputText)
-    console.log(handles)
+    // console.log(handles)
 
     const updatedHandles = await Promise.all(
       handles.map(async (handle) => {
-        if (handle.x_handle in directory) {
-          return {
-            ...handle,
-            threads_exists: true,
-            // @ts-ignore
-            threads_name: directory[handle.x_handle].threads_name,
-            // @ts-ignore
-            threads_handle: directory[handle.x_handle].threads_handle,
+        // Check if the handle is in the directory and if so, return the directory record
+        let record = null
+        if (handle.x_handle !== "") {
+          record = directory.find((obj) => obj.x_handle === handle.x_handle)
+        } else if (handle.linkedin_handle !== "") {
+          record = directory.find(
+            (obj) => obj.linkedin_handle === handle.linkedin_handle
+          )
+        }
+        if (record) {
+          return record
+        }
+
+        // Otherwise, check if the handle is on Threads
+        else {
+          let threadsData
+          if (handle.x_handle !== "") {
+            threadsData = await checkThreadsHandle(handle.x_handle)
+          } else if (
+            handle.linkedin_handle !== "" &&
+            handle.linkedin_handle.indexOf("-") === -1
+          ) {
+            // Ignore LinkedIn handles with "-" in them because they're not valid on Threads
+            threadsData = await checkThreadsHandle(handle.linkedin_handle)
           }
-        } else {
-          const threadsData = await checkThreadsHandle(handle.x_handle)
-          if (threadsData && threadsData.threads_exists) {
+          if (
+            threadsData &&
+            threadsData.threads_handle &&
+            threadsData.threads_handle !== ""
+          ) {
             return {
               ...handle,
-              threads_exists: true,
               threads_name: threadsData.threads_name
                 ? threadsData.threads_name
                 : "",
-              threads_handle: handle.x_handle,
+              threads_handle: threadsData.threads_handle,
             }
           }
-          return {
-            ...handle,
-            threads_exists: false,
-            threads_name: "",
-            threads_handle: "",
-          }
+          return handle
         }
       })
     )
-    console.log(updatedHandles)
+    // console.log(updatedHandles)
     setHandles(updatedHandles)
   }
 
@@ -126,20 +171,25 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center px-4 py-8 max-w-[900px] mx-auto">
       <h1 className="text-4xl font-bold mb-6">Public Directory</h1>
       <p className="mb-3">
-        Paste in X(Twitter) handles to find them on Threads and elsewhere on the
-        web:
+        <span className="font-mono font-semibold">Paste in X(Twitter)</span> or{" "}
+        <span className="font-mono font-semibold">LinkedIn</span> handles to
+        find them on Threads and elsewhere on the web:
       </p>
       <p className="text-sm">
         You don&apos;t have to format the handles in any way. Raw text or HTML
         is totally fine.
       </p>
       <p className="mb-6 text-sm">
-        As long as the handles have an @, twitter.com/, or x.com/ in front of
-        them, just paste it in.
+        As long as the handles have an{" "}
+        <span className="font-mono font-semibold">@</span>,{" "}
+        <span className="font-mono font-semibold">twitter.com/</span>,{" "}
+        <span className="font-mono font-semibold">x.com/</span>, or{" "}
+        <span className="font-mono font-semibold">linkedin.com/in/</span> in
+        front of them, just paste it in.
       </p>
       <textarea
         className="w-full max-w-lg p-4 mb-4 border rounded-md h-auto"
-        placeholder="Paste in X(Twitter) handles here"
+        placeholder="Paste in X(Twitter) or LinkedIn handles here"
         rows={4}
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
@@ -157,6 +207,7 @@ export default function Home() {
           <TableRow>
             {/* <TableHead className="text-slate-900">Name</TableHead> */}
             <TableHead className="text-slate-900">X(Twitter) Handle</TableHead>
+            <TableHead className="text-slate-900">LinkedIn Handle</TableHead>
             <TableHead className="text-slate-900">Threads Name</TableHead>
             <TableHead className="text-slate-900">Threads Handle</TableHead>
             <TableHead className="text-slate-900">Follow on Threads</TableHead>
@@ -169,20 +220,38 @@ export default function Home() {
             <TableRow key={index}>
               {/* <TableCell>{handle.name}</TableCell> */}
               <TableCell>
-                <a
-                  className="underline text-blue-600"
-                  href={`https://www.twitter.com/${handle.x_handle}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  @{handle.x_handle}
-                </a>
+                {handle.x_handle !== "" ? (
+                  <a
+                    className="underline text-blue-600"
+                    href={`https://www.twitter.com/${handle.x_handle}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    @{handle.x_handle}
+                  </a>
+                ) : (
+                  ""
+                )}
+              </TableCell>
+              <TableCell>
+                {handle.linkedin_handle !== "" ? (
+                  <a
+                    className="underline text-blue-600"
+                    href={`https://www.linkedin.com/in/${handle.linkedin_handle}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {handle.linkedin_handle}
+                  </a>
+                ) : (
+                  ""
+                )}
               </TableCell>
               <TableCell>
                 {handle.threads_name ? <>{handle.threads_name}</> : ""}
               </TableCell>
               <TableCell>
-                {handle.threads_exists ? (
+                {handle.threads_handle !== "" ? (
                   <a
                     className="underline text-blue-600"
                     href={`https://www.threads.net/@${handle.threads_handle}`}
@@ -196,7 +265,7 @@ export default function Home() {
                 )}
               </TableCell>
               <TableCell>
-                {handle.threads_exists ? (
+                {handle.threads_handle !== "" ? (
                   <a
                     className="inline-block px-4 py-2 border rounded text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
                     href={`https://www.threads.net/@${handle.threads_handle}`}
@@ -213,7 +282,7 @@ export default function Home() {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="font-normal">
-                      {handle.threads_exists ? (
+                      {handle.threads_handle !== "" ? (
                         <>
                           <Pencil size={16} className="mr-2" />
                           <span>Edit</span>
@@ -230,7 +299,7 @@ export default function Home() {
                   <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
                       <DialogTitle>
-                        {handle.threads_exists ? "Edit" : "Add"} Threads handle
+                        {handle.threads_handle !== "" ? "Edit" : "Add"} Threads handle
                       </DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
