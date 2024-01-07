@@ -42,8 +42,7 @@ export default function Home() {
   const findSubstrings = (str: string) => {
     const xUrlRegex = /(http(s)?:\/\/)?(www.)?(twitter.com\/|x.com\/)/g
     const xHandleRegex = /(@\w+)/g
-    const linkedinUrlRegex =
-      /(http(s)?:\/\/)?(www.)?(linkedin.com\/in\/)([^\/]+)/g
+    const linkedinUrlRegex = /\/in\/[A-Za-z0-9-]+/g
 
     let handles: {
       x_handle: string
@@ -80,9 +79,18 @@ export default function Home() {
     // Find all LinkedIn urls
     let linkedinUrls = str.match(linkedinUrlRegex)
 
+    // Clean up any duplicates
+    if (linkedinUrls) {
+      // @ts-ignore
+      linkedinUrls = linkedinUrls.filter((handle, index) => {
+        // @ts-ignore
+        return index === 0 || handle !== linkedinUrls[index - 1]
+      })
+    }
+
     // Extract the LinkedIn handles
     // For each URL, remove the part before the last "/"
-    let linkedinHandles = linkedinUrls?.map((url) => url.split("/").pop())
+    let linkedinHandles = linkedinUrls?.map((url) => url.replace("/in/", ""))
 
     // Add the LinkedIn handles to the handles array
     linkedinHandles?.map((handle) => {
