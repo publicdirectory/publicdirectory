@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from "next/server"
 import axios from "axios"
 
 export async function POST(req: NextRequest) {
-  const { threads_handle } = await req.json()
+  let { threads_handle } = await req.json()
   console.log(threads_handle)
 
   const title_regex = /<title>(.*?)<\/title>/
   let title = ""
-  let threads_exists = false
   let threads_name = ""
 
   try {
@@ -21,16 +20,16 @@ export async function POST(req: NextRequest) {
 
     if (title) {
       if (title.includes(threads_handle.toLowerCase())) {
-        threads_exists = true
         threads_name = title.split("(")[0].trim()
-
-        console.log(threads_name)
+        // console.log(threads_name)
+      } else {
+        threads_handle = ""
       }
     }
 
     return NextResponse.json({
-      threads_exists: threads_exists,
-      threads_name: threads_name,
+      threads_handle,
+      threads_name,
     })
   } catch (e) {
     console.error(e)
